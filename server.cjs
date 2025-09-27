@@ -218,7 +218,15 @@ const { v4: uuidv4 } = require("uuid");
 
 const upload = multer({ storage: multer.memoryStorage() });
 const app = express();
-app.use(cors());
+// app.use(cors());
+app.use(
+  cors({
+    origin: "https://2beensamaine.com/", // فقط موقعك
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 app.use(express.json());
 
 // Initialize Firebase Admin (optional, used to verify id tokens)
@@ -274,13 +282,18 @@ async function verifyTokenIfPresent(req) {
 // });
 // هذا يلتقط أي OPTIONS لأي مسار
 
+// app.options(/.*/, (req, res) => {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+//   res.header("Access-Control-Allow-Headers", "Authorization,Content-Type");
+//   return res.sendStatus(200);
+// });
 app.options(/.*/, (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", "https://be-ensamaine.web.app");
   res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
   res.header("Access-Control-Allow-Headers", "Authorization,Content-Type");
   return res.sendStatus(200);
 });
-
 // Upload endpoint
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
@@ -340,7 +353,11 @@ app.get("/media", async (req, res) => {
     });
 
     const url = await getSignedUrl(s3, getCmd, { expiresIn: 300 }); // 5 minutes
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    // res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      "https://be-ensamaine.web.app"
+    );
     return res.json({ url, expiresIn: 300 });
   } catch (err) {
     console.error("media err", err);
