@@ -357,6 +357,7 @@ app.get("/media", async (req, res) => {
 
     const url = await getSignedUrl(s3, getCmd, { expiresIn: 300 }); // 5 minutes
     // res.setHeader("Access-Control-Allow-Origin", "*");
+    // res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
     res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
 
     return res.json({ url, expiresIn: 300 });
@@ -366,6 +367,8 @@ app.get("/media", async (req, res) => {
     return res.status(500).json({ error: err.message || "server error" });
   }
 });
+console.log("Bucket =", process.env.R2_BUCKET);
+console.log("Endpoint =", process.env.R2_ENDPOINT);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log("Server listening on", PORT));
