@@ -292,7 +292,7 @@ async function verifyTokenIfPresent(req) {
 //   return res.sendStatus(200);
 // });
 app.options(/.*/, (req, res) => {
-  res.header("Access-Control-Allow-Origin", "https://be-ensamaine.web.app");
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
   res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
   res.header("Access-Control-Allow-Headers", "Authorization,Content-Type");
   return res.sendStatus(200);
@@ -317,11 +317,11 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     );
 
     // return key (we don't return a presigned url here)
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
     return res.json({ key });
   } catch (err) {
     console.error("upload err", err);
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
     return res.status(500).json({ error: err.message || "upload failed" });
   }
 });
@@ -357,10 +357,8 @@ app.get("/media", async (req, res) => {
 
     const url = await getSignedUrl(s3, getCmd, { expiresIn: 300 }); // 5 minutes
     // res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader(
-      "Access-Control-Allow-Origin",
-      "https://be-ensamaine.web.app"
-    );
+    res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
+
     return res.json({ url, expiresIn: 300 });
   } catch (err) {
     console.error("media err", err);
