@@ -77,7 +77,7 @@ async function verifyTokenIfPresent(req) {
 }
 
 // Preflight لجميع الـ OPTIONS
-app.options("/*", (req, res) => {
+app.options(/.*/, (req, res) => {
   res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
   res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
   res.header("Access-Control-Allow-Headers", "Authorization,Content-Type");
