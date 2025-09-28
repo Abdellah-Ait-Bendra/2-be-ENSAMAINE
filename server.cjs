@@ -222,13 +222,17 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "https://be-ensamaine.web.app", // الدومين ديال Firebase Hosting
-      "https://2beensamaine.com", // الدومين المخصص ديالك
-    ], // فقط موقعك
+      "http://localhost:5174", // التطوير
+      "https://be-ensamaine.web.app", // Firebase hosting
+      "https://2beensamaine.com", // دومينك
+    ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// CORS preflight
+app.options("*", cors());
 
 app.use(express.json());
 
