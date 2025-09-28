@@ -232,7 +232,6 @@ app.use(
 );
 
 // CORS preflight
-app.options("*", cors());
 
 app.use(express.json());
 
